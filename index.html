@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Portfolio Studio</title>
+<style>
+:root{
+  --ink:#13213c; --ink2:#1d3461; --red:#d7263d; --red2:#a8182b; --redsoft:#fde8eb;
+  --cream:#fbf6ee; --card:#ffffff; --line:#e6dfd2; --muted:#5d6782; --gold:#f4b942;
+  --engage:#d7263d; --explore:#2b7de9; --explain:#7b4bd6; --extend:#1fa37a; --evaluate:#e8851a;
+  --ok:#1fa37a; --bad:#d7263d;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Tahoma,Arial,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55;font-size:16px}
+.ar{font-family:"Segoe UI","Tahoma",Arial,sans-serif;direction:rtl}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit;font-size:15px}
+.wrap{max-width:1060px;margin:0 auto;padding:0 16px}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--ink) 0%,var(--ink2) 60%,#2a1f4d 100%);color:#fff;padding:34px 0 64px;position:relative;overflow:hidden}
+.hero:before,.hero:after{content:"";position:absolute;left:0;right:0;height:16px;background:repeating-linear-gradient(90deg,#0b1428 0 22px,transparent 22px 34px)}
+.hero:before{top:6px}.hero:after{bottom:6px}
+.hero h1{margin:6px 0 4px;font-size:clamp(28px,5vw,44px);letter-spacing:.5px}
+.hero h1 span{color:var(--gold)}
+.hero p{margin:0;opacity:.9}
+.clap{display:inline-block;background:var(--red);padding:4px 12px;border-radius:6px;font-weight:700;font-size:13px;letter-spacing:1px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);padding:5px 12px;border-radius:30px;font-size:13px}
+
+/* TOP BAR */
+.topbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:3px solid var(--red);box-shadow:0 4px 14px rgba(19,33,60,.08)}
+.topbar .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-top:10px;padding-bottom:10px}
+.pts{font-weight:800;color:var(--red);font-size:18px}
+.prog{flex:1;min-width:160px}
+.prog small{color:var(--muted);font-weight:600}
+.bar{height:10px;background:#eee7da;border-radius:10px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--gold));transition:width .5s}
+.badges{display:flex;gap:6px}
+.badge{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#eee7da;filter:grayscale(1);opacity:.45;font-size:18px;transition:.3s}
+.badge.on{filter:none;opacity:1;background:#fff3d6;box-shadow:0 0 0 2px var(--gold)}
+.tbtn{border:2px solid var(--ink);background:#fff;color:var(--ink);padding:6px 12px;border-radius:8px;font-weight:700;font-size:13px}
+.tbtn.on{background:var(--ink);color:#fff}
+
+/* CARDS */
+.card{background:var(--card);border-radius:16px;padding:22px;margin:18px 0;box-shadow:0 6px 20px rgba(19,33,60,.07);border:1px solid var(--line)}
+.lift{margin-top:-44px;position:relative}
+h2{margin:0 0 12px;font-size:22px}
+h3{margin:0 0 8px;font-size:18px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+label{font-weight:700;font-size:14px;display:block;margin-bottom:4px}
+input[type=text],input[type=date],textarea,select{width:100%;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:#fffdf9;color:var(--ink)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--ink2)}
+textarea{min-height:90px;resize:vertical}
+.wc{font-size:12px;color:var(--muted);text-align:right;margin-top:2px}
+.obj{background:var(--redsoft);border-left:5px solid var(--red);padding:12px 16px;border-radius:10px}
+.obj ul{margin:6px 0 0;padding-left:20px}
+.muted{color:var(--muted)}
+
+/* PHASE NAV */
+.phases{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:18px 0 0}
+.ph{border:none;border-radius:14px;padding:12px 6px;background:#fff;border:2px solid var(--line);text-align:center;font-weight:800;color:var(--ink);position:relative}
+.ph .n{display:block;font-size:22px}
+.ph small{display:block;font-weight:600;color:var(--muted);font-size:11px}
+.ph.active{color:#fff;border-color:transparent}
+.ph.done:after{content:"✓";position:absolute;top:4px;right:8px;font-size:14px;color:var(--ok);font-weight:900}
+.ph.active.done:after{color:#fff}
+.phase{display:none}
+.phase.active{display:block;animation:fade .35s}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.phead{border-radius:16px;color:#fff;padding:18px 22px;margin-top:18px}
+.phead h2{margin:0;font-size:24px}
+.phead p{margin:4px 0 0;opacity:.92}
+.tnote{display:none;background:#fffbea;border:2px dashed var(--gold);border-radius:12px;padding:12px 16px;margin:14px 0;font-size:14px}
+body.teacher .tnote{display:block}
+.tnote b{color:#8a5a00}
+
+/* ACTIVITY BITS */
+.act-n{display:inline-block;background:var(--ink);color:#fff;border-radius:6px;padding:1px 9px;font-size:12px;font-weight:800;margin-right:6px;vertical-align:middle}
+.btn{border:none;border-radius:10px;padding:10px 18px;font-weight:800;font-size:15px;color:#fff;background:var(--ink)}
+.btn.red{background:var(--red)}.btn.green{background:var(--ok)}.btn.ghost{background:#fff;color:var(--ink);border:2px solid var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.fb{margin-top:8px;padding:8px 12px;border-radius:8px;font-size:14px;display:none}
+.fb.show{display:block}.fb.ok{background:#e3f6ef;color:#0d6b4f}.fb.no{background:var(--redsoft);color:var(--red2)}
+
+.clips{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.clip{border:2px solid var(--line);border-radius:14px;padding:14px;background:#fffdf9}
+.clip .scr{background:var(--ink);color:#fff;border-radius:10px;padding:12px;font-style:italic;min-height:84px;position:relative}
+.clip .scr:before{content:"▶";position:absolute;right:10px;top:8px;color:var(--gold);font-style:normal}
+.choice{flex:1;border:2px solid var(--line);background:#fff;border-radius:10px;padding:8px;font-weight:700}
+.choice.sel-ok{background:#e3f6ef;border-color:var(--ok)}
+.choice.sel-no{background:var(--redsoft);border-color:var(--red)}
+
+.pool,.seq{display:flex;flex-wrap:wrap;gap:8px;min-height:52px;padding:10px;border-radius:12px}
+.pool{background:#f3eee4}.seq{background:#e9f1fd;border:2px dashed var(--explore)}
+.tile{border:2px solid var(--explore);background:#fff;color:var(--ink);border-radius:10px;padding:8px 12px;font-weight:700;font-size:14px}
+.seq .tile{background:var(--explore);color:#fff}
+
+.tf{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}
+.tf p{flex:1;min-width:220px;margin:0}
+.tf button{border:2px solid var(--line);background:#fff;border-radius:8px;padding:6px 14px;font-weight:800}
+
+.tl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.tl p{flex:1;min-width:220px;margin:0}
+.light{width:40px;height:40px;border-radius:50%;border:3px solid #ddd;font-weight:900;color:#fff}
+.light.r{background:#e94b4b}.light.a{background:#f5b301}.light.g{background:#22a861}
+.light{opacity:.35}.light.pick{opacity:1;border-color:var(--ink);transform:scale(1.08)}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:10px 0}
+.legend div{border-radius:10px;padding:10px 12px;font-size:14px}
+.legend .r{background:#fdeaea}.legend .a{background:#fff6dc}.legend .g{background:#e4f6ec}
+
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.tab{border:2px solid var(--explain);background:#fff;color:var(--explain);border-radius:30px;padding:6px 14px;font-weight:800;font-size:14px}
+.tab.on{background:var(--explain);color:#fff}
+.guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.box{border-radius:12px;padding:12px 16px;background:#f5f0fd}
+.box.frame{background:#fff7e6}
+.box ul{margin:6px 0 0;padding-left:20px}
+.frame li{font-style:italic}
+
+.script p{padding:10px 14px;border-radius:10px;margin:8px 0;border-left:5px solid transparent;transition:.3s}
+.script.labels p{border-left-color:var(--c);background:color-mix(in srgb,var(--c) 10%,white)}
+.script .lab{display:none;font-size:11px;font-weight:900;letter-spacing:1px;color:var(--c);text-transform:uppercase}
+.script.labels .lab{display:block}
+.sig{display:grid;grid-template-columns:1fr 200px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.sig q{font-style:italic}
+.sig.ok select{border-color:var(--ok);background:#e3f6ef}
+.sig.no select{border-color:var(--red);background:var(--redsoft)}
+@media(max-width:560px){.sig{grid-template-columns:1fr}}
+
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.fc{perspective:700px;height:96px;cursor:pointer}
+.fc .in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.fc.flip .in{transform:rotateY(180deg)}
+.fc .f,.fc .b{position:absolute;inset:0;border-radius:12px;display:grid;place-items:center;text-align:center;padding:8px;backface-visibility:hidden;font-weight:800}
+.fc .f{background:var(--explain);color:#fff}
+.fc .b{background:#fff;border:2px solid var(--explain);color:var(--ink);transform:rotateY(180deg);font-size:18px}
+
+/* EXTEND / PLANNER */
+.slide{aspect-ratio:16/9;max-width:520px;border-radius:12px;background:linear-gradient(120deg,#fff 0 56%,var(--ink) 56%);border:3px solid var(--ink);padding:18px 22px;position:relative;overflow:hidden}
+.slide .t{font-size:clamp(16px,3vw,24px);font-weight:900;color:var(--ink);max-width:58%;line-height:1.2}
+.slide .m{position:absolute;left:22px;bottom:16px;font-size:13px;color:var(--ink);line-height:1.5;max-width:56%}
+.slide .id{position:absolute;right:22px;bottom:22px;width:34%;aspect-ratio:1.6;background:var(--gold);border-radius:10px;display:flex;align-items:center;gap:8px;padding:8px}
+.slide .id i{width:34%;aspect-ratio:1;background:var(--ink);border-radius:6px}
+.slide .id span{flex:1;height:6px;background:#fff;border-radius:3px;box-shadow:0 12px 0 #fff,0 24px 0 #fff}
+.slide .rec{position:absolute;right:16px;top:12px;color:#fff;font-size:12px;font-weight:800}
+.slide .rec:before{content:"●";color:var(--red);margin-right:4px}
+
+.part{border:2px solid var(--line);border-radius:14px;margin:12px 0;overflow:hidden;background:#fff}
+.part.complete{border-color:var(--extend)}
+.ptop{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;background:#fffdf9}
+.ptop .num{width:38px;height:38px;border-radius:50%;background:var(--extend);color:#fff;display:grid;place-items:center;font-weight:900;flex:none}
+.ptop h3{margin:0}.ptop small{color:var(--muted)}
+.ptop .st{margin-left:auto;font-size:20px}
+.pbody{display:none;padding:4px 16px 16px}
+.part.open .pbody{display:block}
+.inc{background:#e8f7f1;border-radius:10px;padding:10px 14px;margin:8px 0}
+.inc ul{margin:4px 0 0;padding-left:20px}
+.tip{background:#fff7e6;border-radius:10px;padding:10px 14px;margin:8px 0;font-size:14px}
+.fld{margin:12px 0}
+.opt{font-weight:600;color:var(--muted);font-size:12px}
+.warn{color:var(--red2);font-weight:700;font-size:14px;margin-top:6px}
+
+.meter{position:relative;height:26px;background:#eee7da;border-radius:14px;overflow:hidden;margin:10px 0}
+.meter .zone{position:absolute;top:0;bottom:0;left:50%;width:33.33%;background:rgba(31,163,122,.25);border-left:2px dashed var(--ok);border-right:2px dashed var(--ok)}
+.meter .fill{position:absolute;top:0;bottom:0;left:0;background:var(--ink2);opacity:.75;transition:width .4s}
+.meter-l{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.clock{font-size:48px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:2px;padding:6px 18px;border-radius:12px;background:var(--ink);color:#fff;display:inline-block;transition:background .3s}
+.clock.good{background:var(--ok)}.clock.long{background:var(--red)}
+
+/* EVALUATE */
+.ck{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line)}
+.ck input{width:22px;height:22px;accent-color:var(--evaluate);flex:none;margin-top:2px}
+.stars button{background:none;border:none;font-size:26px;color:#d9d1c2;padding:0 2px}
+.stars button.on{color:var(--gold)}
+.prow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;padding:8px 0;border-bottom:1px solid var(--line)}
+.q{border:2px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+.q h4{margin:0 0 8px}
+.q label{font-weight:500;display:flex;gap:8px;align-items:flex-start;padding:7px 10px;border-radius:8px;cursor:pointer;margin:3px 0;border:1px solid transparent}
+.q label:hover{background:#faf6ee}
+.q.right{border-color:var(--ok)}.q.wrong{border-color:var(--red)}
+.q label.correct{background:#e3f6ef;border-color:var(--ok)}
+.q label.picked-wrong{background:var(--redsoft);border-color:var(--red)}
+.score{font-size:22px;font-weight:900;text-align:center;padding:14px;border-radius:12px}
+
+/* CERT / MODAL */
+.modal{position:fixed;inset:0;background:rgba(10,18,36,.7);display:none;place-items:center;z-index:200;padding:16px}
+.modal.show{display:grid}
+.cert{background:#fff;max-width:720px;width:100%;border-radius:14px;padding:34px;text-align:center;border:10px double var(--ink);position:relative}
+.cert h2{font-size:30px;color:var(--red);margin:6px 0}
+.cert .who{font-size:28px;font-weight:900;border-bottom:2px solid var(--gold);display:inline-block;padding:0 18px 4px;margin:8px 0}
+.cert .seal{font-size:46px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:30px;font-weight:700;z-index:300;transition:.4s;max-width:90%;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0)}
+canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:250}
+footer{text-align:center;padding:26px 16px 40px;color:var(--muted);font-size:14px}
+#printArea{display:none}
+.lock{font-size:13px;color:var(--muted);margin-top:6px}
+
+@media(max-width:640px){
+  .phases{grid-template-columns:repeat(5,1fr);gap:4px}
+  .ph{padding:8px 2px;font-size:11px}.ph small{display:none}.ph .n{font-size:18px}
+  .card{padding:16px}
+}
+@media print{
+  body{background:#fff}
+  body.p-notes > *:not(#printArea){display:none!important}
+  body.p-notes #printArea{display:block!important;font-size:12pt;color:#000}
+  body.p-cert > *:not(#certModal){display:none!important}
+  body.p-cert #certModal{display:block!important;position:static;background:none;padding:0}
+  body.p-cert #certModal .noprint{display:none}
+  #printArea h1{font-size:20pt;margin:0 0 4px}
+  #printArea h2{font-size:14pt;border-bottom:2px solid #13213c;padding-bottom:3px;margin:18px 0 6px}
+  #printArea .pq{font-weight:700;margin:8px 0 2px}
+  #printArea .pa{white-space:pre-wrap;border:1px solid #ccc;border-radius:6px;padding:6px 8px;min-height:24px}
+  #printArea section{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="clap">🎬 LSC 1503 · PROFESSIONAL SPOKEN COMMUNICATION</span>
+    <h1>Video Portfolio <span>Studio</span></h1>
+    <p>Lights, camera, reflect! Plan, script and check your Communication Skills Portfolio video.</p>
+    <div class="chips">
+      <span class="chip">🔥 Engage</span><span class="chip">🔍 Explore</span><span class="chip">🧠 Explain</span><span class="chip">🎥 Extend</span><span class="chip">✅ Evaluate</span>
+      <span class="chip">⏱️ 3–5 minute video</span><span class="chip">🖨️ Print-ready</span>
+    </div>
+  </div>
+</header>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="pts">⭐ <span id="pts">0</span> pts</div>
+    <div class="prog"><small>Lesson progress <span id="pct">0%</span></small><div class="bar"><i id="barFill"></i></div></div>
+    <div class="badges" id="badges"></div>
+    <button class="tbtn" id="teacherBtn" title="Show suggested timings and teaching notes">👩‍🏫 Teacher notes</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="card lift">
+    <h2>👤 Your Details</h2>
+    <div class="grid2">
+      <div><label>Full name</label><input type="text" data-k="name" placeholder="e.g. Mariam Al Ketbi"></div>
+      <div><label>Student ID</label><input type="text" data-k="sid" placeholder="H00xxxxxx"></div>
+      <div><label>College / Campus</label><input type="text" data-k="campus" placeholder="HCT Abu Dhabi"></div>
+      <div><label>Submission date</label><input type="date" data-k="date"></div>
+    </div>
+    <div class="obj" style="margin-top:16px">
+      <b>🎯 Lesson objectives</b><br>
+      By the end of this lesson, you will be able to:
+      <ul>
+        <li>identify the five parts of the portfolio video and put them in the correct order</li>
+        <li>use signposting language to move clearly from one part to the next</li>
+        <li>plan, script and time your own 3–5 minute reflection video</li>
+        <li>use AI and outside sources responsibly (Red / Amber / Green)</li>
+        <li>check a video with the checklist and give useful peer feedback</li>
+      </ul>
+    </div>
+  </div>
+
+  <nav class="phases" id="phaseNav"></nav>
+
+  <!-- ================= ENGAGE ================= -->
+  <section class="phase" id="p0">
+    <div class="phead" style="background:var(--engage)"><h2>🔥 Engage — Would you keep watching?</h2><p>Every good video wins the viewer in the first 10 seconds. Let's see why.</p></div>
+    <div class="tnote"><b>⏱ Suggested time: 10 min · Whole class → pairs.</b> Project the clips. Students vote individually, then justify their choice to a partner. Draw out the criteria (name + ID, eye contact, quiet room, clear plan, timing, title slides) and write them on the board — they become the checklist in Evaluate.</div>
+    <div class="card">
+      <h3><span class="act-n">1</span>Opening clips</h3>
+      <p class="muted">Read each video opening. Would you keep watching, or click away?</p>
+      <div class="clips" id="clips"></div>
+    </div>
+    <div class="card">
+      <h3><span class="act-n">2</span>Think – Pair – Share</h3>
+      <div class="fld"><label>💭 What is ONE thing that makes you stop watching a video?</label><textarea data-k="e_stop" placeholder="I stop watching when..."></textarea><div class="wc" data-wc="e_stop"></div></div>
+      <div class="fld"><label>🌟 What is ONE thing you want your teacher to remember about you after watching your video?</label><textarea data-k="e_remember" placeholder="I want my teacher to remember that I..."></textarea><div class="wc" data-wc="e_remember"></div></div>
+    </div>
+  </section>
+
+  <!-- ================= EXPLORE ================= -->
+  <section class="phase" id="p1">
+    <div class="phead" style="background:var(--explore)"><h2>🔍 Explore — Unpack the task</h2><p>Be a detective: discover what your video needs before your teacher explains it.</p></div>
+    <div class="tnote"><b>⏱ Suggested time: 20 min · Pairs.</b> Give pairs the assignment brief (the instruction slides) and let them complete the three activities using the brief as evidence. Don't pre-teach — let them find the rules. Circulate and ask "Where did you find that?"</div>
+    <div class="card">
+      <h3><span class="act-n">1</span>Build the video</h3>
+      <p class="muted">Tap the parts in the order they should appear in your video. Tap a part in the blue strip to remove it.</p>
+      <div class="pool" id="pool"></div>
+      <p style="margin:8px 0 4px;font-weight:700">🎞️ My video timeline</p>
+      <div class="seq" id="seq"></div>
+      <div class="row" style="margin-top:10px"><button class="btn" id="orderCheck">Check order</button><button class="btn ghost" id="orderReset">Reset</button></div>
+      <div class="fb" id="orderFb"></div>
+    </div>
+    <div class="card">
+      <h3><span class="act-n">2</span>Brief detective: True or False?</h3>
+      <div id="tfList"></div>
+    </div>
+    <div class="card">
+      <h3><span class="act-n">3</span>AI traffic light</h3>
+      <p class="muted">HCT's Responsible Use of AI guidelines. Choose the right light for each situation.</p>
+      <div class="legend">
+        <div class="r"><b>🔴 Red — not allowed</b><br>AI writing your full script; copying, cloning or imitating a voice or identity.</div>
+        <div class="a"><b>🟡 Amber — allowed with care</b><br>AI images (with a reference); AI for ideas or editing — but you review it.</div>
+        <div class="g"><b>🟢 Green — go ahead</b><br>Research, engagement ideas, revision tools like McGraw Hill GoReact.</div>
+      </div>
+      <div id="tlList"></div>
+    </div>
+  </section>
+
+  <!-- ================= EXPLAIN ================= -->
+  <section class="phase" id="p2">
+    <div class="phead" style="background:var(--explain)"><h2>🧠 Explain — How each part works</h2><p>The key language, a model script and the words you need.</p></div>
+    <div class="tnote"><b>⏱ Suggested time: 25 min · Teacher-led, then pairs.</b> Check Explore answers first. Walk through each tab, focusing on What / So What / Now What. Read the model script aloud with labels OFF; students guess where each part starts, then turn labels ON. Pairs complete the signpost matcher; finish with glossary flip-card quiz-quiz-trade.</div>
+    <div class="card">
+      <h3><span class="act-n">1</span>Part-by-part guide</h3>
+      <div class="tabs" id="gTabs"></div>
+      <div id="gBody"></div>
+    </div>
+    <div class="card">
+      <h3><span class="act-n">2</span>Model script</h3>
+      <p class="muted">Read Fatima's short model. Can you find where each part begins? Then switch on the labels.</p>
+      <div class="row"><button class="btn" id="labBtn" style="background:var(--explain)">🏷️ Show labels</button></div>
+      <div class="script" id="script"></div>
+      <div class="tip">💡 This model is about 2½ minutes when spoken. Your video needs 3–5 minutes, so add more detail and examples from <b>your own</b> experience.</div>
+    </div>
+    <div class="card">
+      <h3><span class="act-n">3</span>Signpost matcher</h3>
+      <p class="muted">Signposts tell the viewer where they are. Which part does each phrase belong to?</p>
+      <div id="sigList"></div>
+      <div class="row" style="margin-top:10px"><button class="btn" id="sigCheck" style="background:var(--explain)">Check answers</button></div>
+      <div class="fb" id="sigFb"></div>
+    </div>
+    <div class="card">
+      <h3><span class="act-n">4</span>Key words · الكلمات الأساسية</h3>
+      <p class="muted">Tap a card to see the Arabic meaning.</p>
+      <div class="gloss" id="gloss"></div>
+    </div>
+  </section>
+
+  <!-- ================= EXTEND ================= -->
+  <section class="phase" id="p3">
+    <div class="phead" style="background:var(--extend)"><h2>🎥 Extend — Plan your own video</h2><p>Now you are the director. Build your title slide, write your notes and time yourself.</p></div>
+    <div class="tnote"><b>⏱ Suggested time: 40 min · Individual.</b> Students draft notes (not a word-for-word script to read). Remind them: one or two LPAs, one study skill, own words only. In the last 10 minutes, pairs rehearse Part 1 and Part 4 aloud with the timer. Students save the JSON backup to continue at home.</div>
+    <div class="card">
+      <h3><span class="act-n">1</span>Title slide builder</h3>
+      <div class="grid2">
+        <div>
+          <div class="fld"><label>Video title</label><input type="text" data-k="vtitle" placeholder="e.g. My Communication Skills Journey"></div>
+          <p class="muted" style="font-size:14px">Your name, ID, campus and date come from <b>Your Details</b> at the top.</p>
+          <div class="tip">🎞️ Remember to add a small title slide between every section too: “Part 2: LPA Reflection”, “Part 3: Study Skills Reflection”…</div>
+        </div>
+        <div class="slide" id="slidePrev">
+          <div class="rec">REC</div>
+          <div class="t" id="sv-title">Communication Skills Video</div>
+          <div class="m" id="sv-meta"></div>
+          <div class="id"><i></i><span></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="act-n">2</span>Script notes planner</h3>
+      <p class="muted">Open each part, write your notes and mark it complete. Each box needs at least 5 words.</p>
+      <div id="parts"></div>
+    </div>
+    <div class="card">
+      <h3><span class="act-n">3</span>Speaking time estimator</h3>
+      <p class="muted">Based on a comfortable speaking speed of about 120 words per minute.</p>
+      <div><b>Total words: <span id="totW">0</span></b> · Estimated time: <b id="estT">0:00</b> · <span id="estMsg" class="muted"></span></div>
+      <div class="meter"><div class="fill" id="estFill"></div><div class="zone"></div></div>
+      <div class="meter-l"><span>0</span><span>1.5</span><span>3 min</span><span>4.5</span><span>5 min</span><span>6</span></div>
+    </div>
+    <div class="card">
+      <h3><span class="act-n">4</span>Rehearsal timer</h3>
+      <p class="muted">Practise out loud. Green = inside 3–5 minutes. Red = too long.</p>
+      <div class="row"><div class="clock" id="clock">0:00</div>
+        <button class="btn green" id="swStart">▶ Start</button><button class="btn ghost" id="swStop">⏸ Pause</button><button class="btn ghost" id="swReset">↺ Reset</button></div>
+      <div class="fld"><label>Rehearsal log: how long was your best try, and what will you change?</label><textarea data-k="x_rehearse" placeholder="My best time was ... Next time I will ..."></textarea></div>
+    </div>
+  </section>
+
+  <!-- ================= EVALUATE ================= -->
+  <section class="phase" id="p4">
+    <div class="phead" style="background:var(--evaluate)"><h2>✅ Evaluate — Check, feedback, prove it</h2><p>Use the checklist, give peer feedback and pass the exit quiz to earn your certificate.</p></div>
+    <div class="tnote"><b>⏱ Suggested time: 20 min · Pairs → individual.</b> Partners swap devices and watch each other rehearse (or a draft recording), completing peer feedback. Students then take the exit quiz individually (80% for the certificate) and write the 3-2-1 exit ticket. Collect the printed PDF or JSON as evidence.</div>
+    <div class="card">
+      <h3><span class="act-n">1</span>Final video checklist</h3>
+      <div id="ckList"></div>
+    </div>
+    <div class="card">
+      <h3><span class="act-n">2</span>Peer feedback</h3>
+      <div class="fld"><label>Peer's name (who watched your rehearsal)</label><input type="text" data-k="pf_name" placeholder="Classmate's name"></div>
+      <div id="pfList"></div>
+      <div class="grid2" style="margin-top:10px">
+        <div><label>👍 One strength</label><textarea data-k="pf_good" placeholder="You were very good at..."></textarea></div>
+        <div><label>🔧 One suggestion</label><textarea data-k="pf_fix" placeholder="Next time, try to..."></textarea></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="act-n">3</span>Exit quiz</h3>
+      <p class="muted">10 scenario questions. Score 80% or more to unlock your certificate.</p>
+      <div id="quiz"></div>
+      <div class="row"><button class="btn red" id="quizSubmit">Submit quiz</button><button class="btn ghost" id="quizRetry" style="display:none">↺ Try again</button><button class="btn" id="certBtn" style="display:none;background:var(--gold);color:var(--ink)">🏆 View certificate</button></div>
+      <div id="quizScore"></div>
+    </div>
+    <div class="card">
+      <h3><span class="act-n">4</span>Exit ticket 3 – 2 – 1</h3>
+      <div class="fld"><label>3 things my video must include</label><textarea data-k="t3"></textarea></div>
+      <div class="fld"><label>2 signpost phrases I will use</label><textarea data-k="t2"></textarea></div>
+      <div class="fld"><label>1 question I still have</label><textarea data-k="t1"></textarea></div>
+    </div>
+  </section>
+
+  <div class="card" style="text-align:center">
+    <h3>💾 Save, load & print</h3>
+    <div class="row" style="justify-content:center">
+      <button class="btn" id="saveBtn">💾 Save backup (JSON)</button>
+      <button class="btn ghost" id="loadBtn">📂 Load backup</button>
+      <input type="file" id="loadFile" accept=".json,application/json" hidden>
+      <button class="btn red" id="printBtn">🖨️ Print / Save as PDF</button>
+    </div>
+    <div class="lock" id="printLock">🔒 Complete all 5 parts of the script planner (Extend) to unlock printing.</div>
+  </div>
+</div>
+
+<footer>Designed by: Nazila Motahari · LSC 1503 Professional Spoken Communication · HCT Abu Dhabi</footer>
+
+<div class="modal" id="certModal">
+  <div>
+    <div class="cert" id="cert">
+      <div class="seal">🏆</div>
+      <div class="muted" style="letter-spacing:2px;font-weight:700">CERTIFICATE OF ACHIEVEMENT</div>
+      <h2>Video Portfolio Studio</h2>
+      <p>This certifies that</p>
+      <div class="who" id="cName">Student</div>
+      <p id="cLine">has completed the 5E lesson and passed the exit quiz.</p>
+      <p class="muted" id="cDate"></p>
+      <p style="margin-top:20px;font-size:14px">Designed by: Nazila Motahari · LSC 1503 · HCT</p>
+    </div>
+    <div class="row noprint" style="justify-content:center;margin-top:12px">
+      <button class="btn red" id="certPrint">🖨️ Print certificate</button>
+      <button class="btn ghost" style="background:#fff" id="certClose">Close</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<div id="printArea"></div>
+
+<script>
+/* ===================== DATA ===================== */
+const PHASES=[["🔥","Engage","Hook"],["🔍","Explore","Discover"],["🧠","Explain","Learn"],["🎥","Extend","Create"],["✅","Evaluate","Check"]];
+const PCOL=["--engage","--explore","--explain","--extend","--evaluate"];
+const BADGES=[["🎬","Hooked — Engage complete"],["🔍","Detective — Explore complete"],["🧠","Expert — Explain complete"],["🎥","Director — all 5 parts planned"],["🏆","Producer — exit quiz passed"]];
+
+const CLIPS=[
+ {t:"“Umm… hi. So… yeah. This is my video, I guess.”",a:"away",fb:"No name, no ID and no plan. Hesitation makes viewers leave."},
+ {t:"“Good morning! My name is Mariam Al Ketbi and my ID is H00123456 — here is my ID card. Today I will take you through my portfolio in five parts.”",a:"keep",fb:"Name, ID, ID card shown and a clear plan. A perfect start!"},
+ {t:"Saif reads from his paper the whole time and never looks up. A TV is playing loudly behind him.",a:"away",fb:"No eye contact and a noisy room. Choose a quiet place and use short notes."},
+ {t:"Shamma smiles, sits in a quiet room with light on her face and says what the video will cover in one sentence.",a:"keep",fb:"Quiet place, good light, friendly face and a clear overview."},
+ {t:"Khalid's video is 9 minutes long. He repeats the same idea about his LPA four times.",a:"away",fb:"The video should be 3–5 minutes. Stay concise and keep it on point."},
+ {t:"The video opens with a title slide (name, ID, campus, date). Later, a small slide says “Part 2: LPA Reflection”.",a:"keep",fb:"Title slides help the viewer follow every section."}
+];
+const ORDER=["🖼️ Title slide","👋 Introduction + ID card","📝 LPA reflection","📚 Study skill reflection","🔧 Improvement (What / So What / Now What)","🎬 Conclusion"];
+const TF=[
+ ["The video should be about 3–5 minutes long.",true,"Yes — around 3–5 minutes."],
+ ["You must reflect on exactly three LPAs.",false,"Choose one or two LPAs."],
+ ["You choose one study skill from the LSC 1503 BBL Study Skills.",true,"Correct — one study skill you found valuable."],
+ ["Showing your ID card at the start is optional.",false,"It is required for verification."],
+ ["You should add title slides between the sections.",true,"Yes — this is highlighted in the brief."],
+ ["In Part 2, you show a screenshot of your LPA form or your notes.",true,"Correct — it is your evidence."],
+ ["A friend can record their voice for you if your English is not strong.",false,"You must be the person appearing and speaking."],
+ ["You must keep evidence (notes, drafts) in case your teacher asks for proof.",true,"Yes — keep proof of your original work."]
+];
+const TL=[
+ ["Ask AI to write your whole script, then read it to the camera.","r","Red — no full scripts by AI or outside sources."],
+ ["Use an app to clone your voice so you don't have to speak.","r","Red — no voice cloning or copying identity."],
+ ["Use an AI avatar to present the video instead of you.","r","Red — you must be the person appearing and speaking."],
+ ["Make an AI image for your title slide and add a reference.","a","Amber — AI images are fine with a reference."],
+ ["Ask AI for ideas for your improvement strategy, then choose one and write it in your own words.","a","Amber — AI for ideas, with your review."],
+ ["Use AI to check the grammar of YOUR notes, then review every change.","a","Amber — AI for editing, with your review."],
+ ["Search online to learn more about a study skill like mind mapping.","g","Green — research is fine."],
+ ["Practise with GoReact to get feedback on your delivery.","g","Green — revision tools are encouraged."]
+];
+const PARTS=[
+ {n:"Introduction",s:"Introduce yourself & set the scene",c:"#d7263d",
+  inc:["Greet your audience warmly","State your <b>full name</b> and <b>student ID number</b>","Hold up your <b>ID card to the camera</b> for verification","Briefly say what your video will cover"],
+  fr:["Hello / Good morning, everyone.","My name is … and my student ID is …","Here is my ID card.","In this video, I will talk about …, … and …"],
+  tip:"Smile, look at the camera and speak slowly. First impressions count!",
+  f:[["i_greet","👋 Greeting & self-introduction (name + ID)"],["i_id","🪪 How I will show my ID card"],["i_over","🗂️ Overview: what my video will cover"]]},
+ {n:"LPA Reflection",s:"Reflect on one or two Learning Portfolio Artifacts",c:"#2b7de9",
+  inc:["Name the <b>LPA activity</b> you chose (one or two)","<b>Describe</b> the activity — what did you do?","Explain <b>why you chose it</b>","Share <b>what you learned</b>","Show a <b>screenshot</b> of your LPA form or notes on screen"],
+  fr:["Let's start with my LPA reflection.","I chose LPA … In this activity, I …","I chose it because …","Through this activity, I learned that …"],
+  tip:"Connect what you learned to real-life communication: at college, at work or with family.",
+  f:[["l_what","📝 Name of the LPA & what the activity was"],["l_why","❓ Why I chose this LPA"],["l_learn","💡 What I learned"],["l_two","➕ Second LPA (what, why, what I learned)",1],["l_shot","📸 Which screenshot I will show"]]},
+ {n:"Study Skill Reflection",s:"One study skill from LSC 1503 BBL Study Skills",c:"#7b4bd6",
+  inc:["Name <b>one study skill</b>","<b>Describe</b> the skill — what is it?","Explain <b>why you chose it</b>","Share <b>what you learned</b> and give an example"],
+  fr:["Now, let's move on to study skills.","The skill I found most useful is …","This skill means …","I chose it because …","I used it when … and I learned that …"],
+  tip:"Give one real example of when you used the skill this semester.",
+  f:[["s_what","📚 The study skill & what it is"],["s_why","🎯 Why I chose this skill"],["s_learn","🌱 What I learned + an example"]]},
+ {n:"Area for Improvement",s:"What? So What? Now What?",c:"#1fa37a",
+  inc:["<b>WHAT?</b> Identify the issue — be specific and honest","<b>SO WHAT?</b> Explain why it is important","<b>NOW WHAT?</b> Suggest a strategy to improve"],
+  fr:["One thing I would like to improve is …","This is important because …","To improve, I will …","For example, every week I will …"],
+  tip:"Be honest but professional. A clear, realistic plan shows a growth mindset.",
+  f:[["m_what","🔷 WHAT? The issue"],["m_so","🔴 SO WHAT? Why it matters"],["m_now","🟢 NOW WHAT? My strategy"]]},
+ {n:"Conclusion",s:"Summarise & close powerfully",c:"#e8851a",
+  inc:["<b>Summarise</b> your main points","End with a <b>strong closing statement</b>","<b>Thank</b> the viewer for watching"],
+  fr:["To sum up, in this video I …","This course taught me that …","Thank you very much for watching."],
+  tip:"Don't add new information in the conclusion — finish confidently.",
+  f:[["c_sum","🔁 Summary of my points"],["c_close","✨ Strong closing statement"],["c_thanks","🙏 Thank-you message"]]}
+];
+const GUIDE_TITLE={n:"Title Slide",c:"#13213c",inc:["Title of the video","Your complete name","Your ID number","Your college / campus","The date"],fr:["Communication Skills Portfolio","Prepared by: [Your Name] · [ID]","LSC 1503 · HCT [Campus] · [Date]"],tip:"Then add a small title slide between each section when you edit."};
+const SCRIPT=[
+ [0,"Good morning, everyone. My name is Fatima Al Mansoori and my student ID is H00XXXXXX. Here is my ID card. In this video, I will talk about my favourite LPA, a study skill that helped me, one thing I want to improve, and then I will finish with a short conclusion."],
+ [1,"Let's start with my LPA reflection. I chose LPA 2A, the “About You” project. In this activity, I wrote a script and recorded a two-minute audio about myself. I chose it because it was the first time I heard my own voice in English. Through this activity, I learned that planning my ideas before I speak makes me more confident. [Shows screenshot of LPA form]"],
+ [2,"Now, let's move on to study skills. The skill I found most useful is mind mapping. A mind map is a picture of your ideas with the main topic in the centre. I chose it because I am a visual learner. I used it to plan this video, and I learned that it helps me remember my ideas without reading a script."],
+ [3,"Next, I want to talk about one thing I would like to improve. What? I speak too fast when I am nervous. So what? This is important because listeners cannot follow my ideas, and at work this can cause misunderstandings. Now what? To improve, I will record myself every week, listen carefully, and pause after each main idea."],
+ [4,"To sum up, in this video I reflected on my LPA, my favourite study skill and my plan to improve. This course taught me that good communication is a skill we can build step by step. Thank you very much for watching."]
+];
+const SIGS=[
+ ["Let me start by introducing myself.",0],["Let's start with my LPA reflection.",1],["The activity I chose was …",1],
+ ["Now, let's move on to study skills.",2],["The skill I found most useful is …",2],["One thing I would like to improve is …",3],
+ ["To improve, I will …",3],["To sum up, …",4],["Thank you very much for watching.",4]
+];
+const GLOSS=[["portfolio","ملف الإنجاز"],["reflection","التأمّل الذاتي"],["verification","التحقّق"],["learning artifact (LPA)","عمل تعلّمي"],["study skill","مهارة دراسية"],["improvement","تحسين"],["strategy","استراتيجية"],["title slide","شريحة العنوان"],["transition","انتقال"],["signposting","عبارات التوجيه والربط"],["summarise","يلخّص"],["closing statement","عبارة ختامية"],["rehearse","يتدرّب"],["fluency","الطلاقة"],["concise","موجز"],["screenshot","لقطة شاشة"],["peer feedback","ملاحظات الزملاء"],["academic integrity","النزاهة الأكاديمية"],["evidence","دليل"],["edit","يعدّل / يحرّر"]];
+const CHECK=["Title slide with name, ID, college and date","Show ID card at the start","Title slides for each section","LPA reflection (what, why, what you learned)","Study skill (what, why, what you learned)","Improvement section (What? So What? Now What?)","Clear and strong conclusion","Edit for clarity, sound and visuals","Peer feedback received","Video uploaded to Blackboard"];
+const PEER=["Structure — all 5 parts are clear","Clarity — grammar & pronunciation","Delivery — eye contact & gestures","Timing — about 3–5 minutes","Visuals — title slides & screenshot"];
+const QUIZ=[
+ ["Hamad's video is 7 minutes long. What should he do?",["Cut repeated ideas so it is 3–5 minutes","Speak faster so all his ideas still fit","Keep it, because longer videos score higher","Remove his conclusion to save some time"]],
+ ["Which sentence is best for the “So What?” step?",["This matters because I need clear speech at work.","I want to improve my pronunciation of long words.","I will record myself twice a week and listen.","My name is Ali and this is my portfolio video."]],
+ ["Noura made an AI image for her title slide. What must she do?",["Add a reference for the image","Nothing — images are always allowed freely","Delete it, because all AI use is banned","Ask a classmate to say they drew it"]],
+ ["In Part 2 (LPA reflection), what should you show on screen?",["A screenshot of your LPA form or notes","A photo of your classmates in the class","Your full script so viewers can read it","A clip from YouTube about reflection"]],
+ ["What is the correct order for the improvement section?",["What → So What → Now What","Now What → What → So What","So What → Now What → What","What → Now What → So What"]],
+ ["Which is a “Now What?” sentence?",["To improve, I will practise with GoReact weekly.","My biggest problem is that I speak too quietly.","This matters because teachers can't hear me.","Thank you for watching my portfolio video."]],
+ ["Saeed wants a strong conclusion. What should he do?",["Summarise, give a closing idea, thank viewers","Introduce a new LPA he did not mention yet","Stop suddenly after the improvement part","Read a list of every activity in the course"]],
+ ["Where is the best place to record?",["A quiet room with light on your face","A café with music so it feels relaxed","In the car while driving to college","A dark bedroom with the TV switched on"]],
+ ["Why do you show your ID card at the start?",["To verify you are the person in the video","To make the video closer to five minutes","Because the title slide has no ID number","So viewers can see your favourite photo"]],
+ ["What should you keep in case your teacher asks?",["Notes and drafts that prove it is your work","Only the final video — delete everything else","The AI chat that wrote your whole script","A classmate's script to compare with yours"]]
+];
+
+/* ===================== STATE ===================== */
+let S={v:{},g:{open:{},order:[],pool:null,tf:{},tl:{},sp:{},spChecked:false,quiz:null},done:{},aw:{},pts:0,badges:[],phase:0,teacher:false};
+const $=id=>document.getElementById(id);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const words=s=>String(s||"").trim().split(/\s+/).filter(Boolean).length;
+
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2600);}
+function award(key,n){if(S.aw[key])return;S.aw[key]=1;S.pts+=n;$("pts").textContent=S.pts;}
+function badge(i){if(S.badges.includes(i))return;S.badges.push(i);renderBadges();confetti();toast(BADGES[i][0]+" Badge unlocked: "+BADGES[i][1]);award("badge"+i,50);renderNav();updateProgress();}
+
+/* ===================== NAV / TOP ===================== */
+function renderNav(){
+  $("phaseNav").innerHTML=PHASES.map((p,i)=>`<button class="ph ${S.phase===i?"active":""} ${S.badges.includes(i)?"done":""}" data-i="${i}" style="${S.phase===i?`background:var(${PCOL[i]})`:""}"><span class="n">${p[0]}</span>${p[1]}<small>${p[2]}</small></button>`).join("");
+  document.querySelectorAll(".phase").forEach((s,i)=>s.classList.toggle("active",i===S.phase));
+}
+$("phaseNav").addEventListener("click",e=>{const b=e.target.closest(".ph");if(!b)return;S.phase=+b.dataset.i;renderNav();window.scrollTo({top:$("phaseNav").offsetTop-70,behavior:"smooth"});});
+function renderBadges(){$("badges").innerHTML=BADGES.map((b,i)=>`<div class="badge ${S.badges.includes(i)?"on":""}" title="${b[1]}">${b[0]}</div>`).join("");}
+$("teacherBtn").onclick=()=>{S.teacher=!S.teacher;applyTeacher();};
+function applyTeacher(){document.body.classList.toggle("teacher",S.teacher);$("teacherBtn").classList.toggle("on",S.teacher);}
+function updateProgress(){
+  let total=0,got=0;
+  total+=CLIPS.length;got+=Object.keys(S.g.open).length;
+  total+=1;got+=S.aw.order?1:0;
+  total+=TF.length;got+=Object.keys(S.g.tf).length;
+  total+=TL.length;got+=Object.keys(S.g.tl).length;
+  total+=1;got+=S.g.spChecked?1:0;
+  total+=PARTS.length*2;got+=PARTS.filter((p,i)=>S.done["part"+i]).length*2;
+  total+=CHECK.length;got+=CHECK.filter((c,i)=>S.v["ck"+i]).length;
+  total+=2;got+=(S.g.quiz&&S.g.quiz.submitted)?2:0;
+  const p=Math.round(got/total*100);$("pct").textContent=p+"%";$("barFill").style.width=p+"%";
+}
+
+/* ===================== BINDING ===================== */
+function bindAll(){
+  document.querySelectorAll("[data-k]").forEach(el=>{
+    const k=el.dataset.k;
+    if(el.type==="checkbox")el.checked=!!S.v[k]; else el.value=S.v[k]||"";
+    if(el._bound)return;el._bound=1;
+    el.addEventListener("input",()=>{S.v[k]=el.type==="checkbox"?el.checked:el.value;onInput(k);});
+    el.addEventListener("change",()=>{S.v[k]=el.type==="checkbox"?el.checked:el.value;onInput(k);});
+  });
+  document.querySelectorAll("[data-k]").forEach(el=>onInput(el.dataset.k,true));
+}
+function onInput(k,silent){
+  const wc=document.querySelector(`[data-wc="${k}"]`);if(wc)wc.textContent=words(S.v[k])+" words";
+  if(["vtitle","name","sid","campus","date"].includes(k))renderSlide();
+  if(k.startsWith("ck")&&!silent){if(S.v[k])award(k,5);$("pts").textContent=S.pts;updateProgress();}
+  if(/^(i_|l_|s_|m_|c_)/.test(k))estimate();
+}
+
+/* ===================== ENGAGE ===================== */
+function renderClips(){
+  $("clips").innerHTML=CLIPS.map((c,i)=>{const a=S.g.open[i];const ok=a===c.a;
+    return `<div class="clip"><div class="scr">${c.t}</div><div class="row" style="margin-top:10px">
+    <button class="choice ${a==="keep"?(ok?"sel-ok":"sel-no"):""}" data-i="${i}" data-a="keep">👍 Keep watching</button>
+    <button class="choice ${a==="away"?(ok?"sel-ok":"sel-no"):""}" data-i="${i}" data-a="away">👎 Click away</button></div>
+    <div class="fb ${a?"show "+(ok?"ok":"no"):""}">${a?(ok?"✅ ":"🤔 ")+c.fb:""}</div></div>`;}).join("");
+}
+$("clips").addEventListener("click",e=>{const b=e.target.closest(".choice");if(!b)return;const i=+b.dataset.i;if(S.g.open[i])return;
+  S.g.open[i]=b.dataset.a;if(b.dataset.a===CLIPS[i].a)award("open"+i,10);$("pts").textContent=S.pts;renderClips();updateProgress();
+  if(Object.keys(S.g.open).length===CLIPS.length)badge(0);});
+
+/* ===================== EXPLORE ===================== */
+function renderOrder(){
+  if(!S.g.pool)S.g.pool=shuffle(ORDER.map((_,i)=>i));
+  $("pool").innerHTML=S.g.pool.filter(i=>!S.g.order.includes(i)).map(i=>`<button class="tile" data-i="${i}">${ORDER[i]}</button>`).join("")||'<span class="muted">All parts placed ✔</span>';
+  $("seq").innerHTML=S.g.order.map((i,n)=>`<button class="tile" data-i="${i}">${n+1}. ${ORDER[i]}</button>`).join("")||'<span class="muted">Tap the parts above…</span>';
+}
+$("pool").addEventListener("click",e=>{const b=e.target.closest(".tile");if(!b)return;S.g.order.push(+b.dataset.i);renderOrder();});
+$("seq").addEventListener("click",e=>{const b=e.target.closest(".tile");if(!b)return;S.g.order=S.g.order.filter(x=>x!==+b.dataset.i);renderOrder();});
+$("orderReset").onclick=()=>{S.g.order=[];S.g.pool=shuffle(ORDER.map((_,i)=>i));renderOrder();$("orderFb").className="fb";};
+$("orderCheck").onclick=()=>{const fb=$("orderFb");
+  if(S.g.order.length<ORDER.length){fb.className="fb show no";fb.textContent="Place all six parts first.";return;}
+  const right=S.g.order.filter((v,i)=>v===i).length;
+  if(right===ORDER.length){fb.className="fb show ok";fb.textContent="🎉 Perfect! Title slide → Introduction → LPA → Study skill → Improvement → Conclusion.";award("order",30);$("pts").textContent=S.pts;checkExplore();updateProgress();}
+  else{fb.className="fb show no";fb.textContent=`${right} of 6 are in the right place. Check the “Structure Your Video” slide and try again.`;}
+};
+function renderTF(){
+  $("tfList").innerHTML=TF.map((t,i)=>{const a=S.g.tf[i];const done=a!==undefined;const ok=a===t[1];
+   const st=v=>done&&a===v?(ok?"background:#e3f6ef;border-color:var(--ok)":"background:var(--redsoft);border-color:var(--red)"):"";
+   return `<div class="tf"><p>${i+1}. ${t[0]}</p><button data-i="${i}" data-v="1" style="${st(true)}">True</button><button data-i="${i}" data-v="0" style="${st(false)}">False</button>
+   <div class="fb ${done?"show "+(ok?"ok":"no"):""}" style="width:100%">${done?(ok?"✅ ":"❌ ")+t[2]:""}</div></div>`;}).join("");
+}
+$("tfList").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const i=+b.dataset.i;if(S.g.tf[i]!==undefined)return;
+  S.g.tf[i]=b.dataset.v==="1";if(S.g.tf[i]===TF[i][1])award("tf"+i,10);$("pts").textContent=S.pts;renderTF();checkExplore();updateProgress();});
+function renderTL(){
+  $("tlList").innerHTML=TL.map((t,i)=>{const a=S.g.tl[i];const ok=a===t[1];
+   return `<div class="tl"><p>${t[0]}</p>${["r","a","g"].map(c=>`<button class="light ${c} ${a===c?"pick":""}" data-i="${i}" data-c="${c}" aria-label="${c}">${a===c?(ok?"✓":"✗"):""}</button>`).join("")}
+   <div class="fb ${a?"show "+(ok?"ok":"no"):""}" style="width:100%">${a?(ok?"✅ ":"❌ ")+t[2]:""}</div></div>`;}).join("");
+}
+$("tlList").addEventListener("click",e=>{const b=e.target.closest(".light");if(!b)return;const i=+b.dataset.i;if(S.g.tl[i])return;
+  S.g.tl[i]=b.dataset.c;if(S.g.tl[i]===TL[i][1])award("tl"+i,10);$("pts").textContent=S.pts;renderTL();checkExplore();updateProgress();});
+function checkExplore(){if(S.aw.order&&Object.keys(S.g.tf).length===TF.length&&Object.keys(S.g.tl).length===TL.length)badge(1);}
+
+/* ===================== EXPLAIN ===================== */
+let gTab=0;
+function renderGuide(){
+  const all=[GUIDE_TITLE,...PARTS];
+  $("gTabs").innerHTML=all.map((p,i)=>`<button class="tab ${gTab===i?"on":""}" data-i="${i}">${i===0?"🖼️":i+"."} ${p.n}</button>`).join("");
+  const p=all[gTab];
+  $("gBody").innerHTML=`<div class="guide"><div class="box" style="border-top:4px solid ${p.c}"><b>📌 What to include</b><ul>${p.inc.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+   <div class="box frame"><b>🗣️ Useful language</b><ul>${p.fr.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div></div><div class="tip">💡 ${p.tip}</div>
+   ${gTab===4?`<div class="guide" style="margin-top:10px">
+     <div class="box" style="background:#e9f1fd"><b>🔷 WHAT?</b><br>The issue. <i>“I speak too fast when I'm nervous.”</i></div>
+     <div class="box" style="background:#fdeaea"><b>🔴 SO WHAT?</b><br>Why it matters. <i>“Listeners can't follow my ideas.”</i></div>
+     <div class="box" style="background:#e4f6ec"><b>🟢 NOW WHAT?</b><br>Your plan. <i>“I'll record myself weekly and pause more.”</i></div></div>`:""}`;
+}
+$("gTabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;gTab=+b.dataset.i;renderGuide();});
+function renderScript(){$("script").innerHTML=SCRIPT.map(([p,t])=>`<p style="--c:${PARTS[p].c}"><span class="lab">Part ${p+1} · ${PARTS[p].n}</span>${esc(t)}</p>`).join("");}
+$("labBtn").onclick=()=>{const s=$("script");s.classList.toggle("labels");$("labBtn").textContent=s.classList.contains("labels")?"🙈 Hide labels":"🏷️ Show labels";award("labels",5);$("pts").textContent=S.pts;};
+function renderSigs(){
+  $("sigList").innerHTML=SIGS.map((s,i)=>{const v=S.g.sp[i];const cls=S.g.spChecked&&v!==undefined&&v!==""?(+v===s[1]?"ok":"no"):"";
+   return `<div class="sig ${cls}"><q>${esc(s[0])}</q><select data-i="${i}"><option value="">Choose…</option>${PARTS.map((p,j)=>`<option value="${j}" ${String(v)===String(j)?"selected":""}>${j+1}. ${p.n}</option>`).join("")}</select></div>`;}).join("");
+}
+$("sigList").addEventListener("change",e=>{const s=e.target;S.g.sp[s.dataset.i]=s.value;s.closest(".sig").className="sig";});
+$("sigCheck").onclick=()=>{S.g.spChecked=true;let r=0;SIGS.forEach((s,i)=>{if(S.g.sp[i]!==undefined&&S.g.sp[i]!==""&&+S.g.sp[i]===s[1]){r++;award("sig"+i,10);}});
+  $("pts").textContent=S.pts;renderSigs();const fb=$("sigFb");
+  if(r===SIGS.length){fb.className="fb show ok";fb.textContent="🎉 All correct! You can signpost like a pro.";badge(2);}
+  else{fb.className="fb show no";fb.textContent=`${r} / ${SIGS.length} correct. Fix the red ones and check again.`;}
+  updateProgress();};
+function renderGloss(){$("gloss").innerHTML=GLOSS.map(g=>`<div class="fc"><div class="in"><div class="f">${g[0]}</div><div class="b ar">${g[1]}</div></div></div>`).join("");}
+$("gloss").addEventListener("click",e=>{const c=e.target.closest(".fc");if(c)c.classList.toggle("flip");});
+
+/* ===================== EXTEND ===================== */
+function renderSlide(){
+  $("sv-title").textContent=S.v.vtitle||"Communication Skills Video";
+  const d=S.v.date?new Date(S.v.date+"T00:00").toLocaleDateString("en-GB"):"dd/mm/yyyy";
+  $("sv-meta").innerHTML=`Prepared by: <b>${esc(S.v.name||"Your Name")}</b><br>ID: ${esc(S.v.sid||"H00xxxxxx")}<br>LSC 1503 · ${esc(S.v.campus||"HCT Campus")}<br>Date: ${d}`;
+}
+function renderParts(){
+  $("parts").innerHTML=PARTS.map((p,i)=>{const done=S.done["part"+i];
+   return `<div class="part ${done?"complete":""}" id="part${i}"><div class="ptop" data-i="${i}"><div class="num" style="background:${p.c}">${i+1}</div><div><h3>${p.n}</h3><small>${p.s}</small></div><span class="st">${done?"✅":"⬜"} ▾</span></div>
+   <div class="pbody"><div class="inc"><b>📌 What to include</b><ul>${p.inc.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+   <div class="tip">🗣️ <b>Sentence starters:</b> ${p.fr.map(esc).join(" · ")}</div>
+   ${p.f.map(f=>`<div class="fld"><label>${f[1]} ${f[2]?'<span class="opt">(optional)</span>':""}</label><textarea data-k="${f[0]}" placeholder="Write short notes in your own words…"></textarea><div class="wc" data-wc="${f[0]}"></div></div>`).join("")}
+   <button class="btn green" data-done="${i}">${done?"✓ Completed — update":"✅ Mark Part "+(i+1)+" complete"}</button><div class="warn" id="warn${i}"></div></div></div>`;}).join("");
+  bindAll();
+}
+$("parts").addEventListener("click",e=>{
+  const top=e.target.closest(".ptop");if(top){$("part"+top.dataset.i).classList.toggle("open");return;}
+  const b=e.target.closest("[data-done]");if(!b)return;const i=+b.dataset.done;
+  const miss=PARTS[i].f.filter(f=>!f[2]&&words(S.v[f[0]])<5);
+  if(miss.length){$("warn"+i).textContent="✋ Add at least 5 words to: "+miss.map(f=>f[1].replace(/^\S+\s/,"")).join(", ");return;}
+  $("warn"+i).textContent="";const first=!S.done["part"+i];S.done["part"+i]=1;award("part"+i,20);$("pts").textContent=S.pts;
+  const el=$("part"+i);el.classList.add("complete");el.classList.remove("open");el.querySelector(".st").textContent="✅ ▾";b.textContent="✓ Completed — update";
+  if(first)toast("🎬 Part "+(i+1)+" complete!");
+  if(PARTS.every((p,j)=>S.done["part"+j]))badge(3);
+  updateProgress();updatePrintLock();
+});
+function estimate(){
+  let w=0;PARTS.forEach(p=>p.f.forEach(f=>{if(f[0]!=="l_shot"&&f[0]!=="i_id")w+=words(S.v[f[0]]);}));
+  const sec=Math.round(w/120*60);$("totW").textContent=w;$("estT").textContent=Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0");
+  $("estFill").style.width=Math.min(100,sec/360*100)+"%";
+  $("estMsg").textContent=sec<180?"Add more detail to reach 3 minutes.":sec<=300?"✅ Great — inside the 3–5 minute range!":"⚠️ Too long — cut repeated ideas.";
+}
+let sw={t:0,run:false,int:null};
+function drawClock(){const s=Math.floor(sw.t);const c=$("clock");c.textContent=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");c.className="clock"+(s>=180&&s<=300?" good":s>300?" long":"");}
+$("swStart").onclick=()=>{if(sw.run)return;sw.run=true;let last=Date.now();sw.int=setInterval(()=>{const n=Date.now();sw.t+=(n-last)/1000;last=n;drawClock();},250);award("timer",10);$("pts").textContent=S.pts;};
+$("swStop").onclick=()=>{sw.run=false;clearInterval(sw.int);};
+$("swReset").onclick=()=>{sw.run=false;clearInterval(sw.int);sw.t=0;drawClock();};
+
+/* ===================== EVALUATE ===================== */
+function renderCheck(){$("ckList").innerHTML=CHECK.map((c,i)=>`<label class="ck"><input type="checkbox" data-k="ck${i}"><span>${c}</span></label>`).join("");}
+function renderPeer(){
+  $("pfList").innerHTML=PEER.map((p,i)=>{const v=+S.v["pf"+i]||0;return `<div class="prow"><span>${p}</span><span class="stars">${[1,2,3,4].map(n=>`<button data-i="${i}" data-n="${n}" class="${n<=v?"on":""}" aria-label="${n} stars">★</button>`).join("")}</span></div>`;}).join("");
+}
+$("pfList").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.v["pf"+b.dataset.i]=+b.dataset.n;award("pf"+b.dataset.i,4);$("pts").textContent=S.pts;renderPeer();});
+function newQuiz(){S.g.quiz={order:shuffle(QUIZ.map((_,i)=>i)),opts:QUIZ.map(q=>shuffle(q[1].map((_,j)=>j))),ans:{},submitted:false,score:0};}
+function renderQuiz(){
+  if(!S.g.quiz)newQuiz();const Q=S.g.quiz;
+  $("quiz").innerHTML=Q.order.map((qi,n)=>{const q=QUIZ[qi];const a=Q.ans[qi];const right=Q.submitted&&a===0;
+   return `<div class="q ${Q.submitted?(right?"right":"wrong"):""}"><h4>${n+1}. ${esc(q[0])}</h4>${Q.opts[qi].map(oj=>{
+     let cls="";if(Q.submitted){if(oj===0)cls="correct";else if(a===oj)cls="picked-wrong";}
+     return `<label class="${cls}"><input type="radio" name="q${qi}" value="${oj}" ${a===oj?"checked":""} ${Q.submitted?"disabled":""}> <span>${esc(q[1][oj])}</span></label>`;}).join("")}</div>`;}).join("");
+  $("quizSubmit").style.display=Q.submitted?"none":"";$("quizRetry").style.display=Q.submitted?"":"none";
+  $("certBtn").style.display=Q.submitted&&Q.score>=80?"":"none";
+  if(Q.submitted){const pass=Q.score>=80;$("quizScore").innerHTML=`<div class="score" style="background:${pass?"#e3f6ef":"var(--redsoft)"};margin-top:12px">${pass?"🏆":"💪"} ${Q.score}% ${pass?"— You passed! Certificate unlocked.":"— You need 80%. Review the Explain section and try again."}</div>`;}
+  else $("quizScore").innerHTML="";
+}
+$("quiz").addEventListener("change",e=>{if(e.target.type==="radio"){S.g.quiz.ans[e.target.name.slice(1)]=+e.target.value;}});
+$("quizSubmit").onclick=()=>{const Q=S.g.quiz;if(Object.keys(Q.ans).length<QUIZ.length){toast("Answer all 10 questions first.");return;}
+  let r=0;QUIZ.forEach((q,i)=>{if(Q.ans[i]===0){r++;award("quiz"+i,10);}});Q.score=Math.round(r/QUIZ.length*100);Q.submitted=true;
+  $("pts").textContent=S.pts;renderQuiz();updateProgress();if(Q.score>=80){badge(4);showCert();}};
+$("quizRetry").onclick=()=>{newQuiz();renderQuiz();updateProgress();};
+function showCert(){
+  $("cName").textContent=S.v.name||"Student";
+  $("cLine").textContent=`has completed the LSC 1503 Video Portfolio 5E lesson and scored ${S.g.quiz.score}% on the exit quiz.`;
+  $("cDate").textContent=(S.v.sid?"ID: "+S.v.sid+" · ":"")+new Date().toLocaleDateString("en-GB");
+  $("certModal").classList.add("show");
+}
+$("certBtn").onclick=showCert;$("certClose").onclick=()=>$("certModal").classList.remove("show");
+$("certPrint").onclick=()=>{document.body.classList.add("p-cert");window.print();};
+
+/* ===================== SAVE / LOAD / PRINT ===================== */
+$("saveBtn").onclick=()=>{const blob=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download="LSC1503_Video_Studio_"+(S.v.name||"student").replace(/\s+/g,"_")+".json";a.click();URL.revokeObjectURL(a.href);toast("💾 Backup saved. Keep it safe!");};
+$("loadBtn").onclick=()=>$("loadFile").click();
+$("loadFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);
+  S=Object.assign(S,d);S.g=Object.assign({open:{},order:[],pool:null,tf:{},tl:{},sp:{},spChecked:false,quiz:null},d.g||{});renderAll();toast("📂 Backup loaded. Welcome back!");}catch(err){toast("⚠️ That file could not be read.");}};r.readAsText(f);e.target.value="";};
+function updatePrintLock(){const ok=PARTS.every((p,i)=>S.done["part"+i]);$("printBtn").disabled=!ok;$("printLock").style.display=ok?"none":"";}
+$("printBtn").onclick=()=>{
+  const pa=(q,a)=>`<div class="pq">${q}</div><div class="pa">${esc(a)||"—"}</div>`;
+  const d=S.v.date?new Date(S.v.date+"T00:00").toLocaleDateString("en-GB"):"";
+  let h=`<h1>Communication Skills Portfolio — Video Notes</h1><p><b>Name:</b> ${esc(S.v.name)} &nbsp; <b>ID:</b> ${esc(S.v.sid)} &nbsp; <b>Campus:</b> ${esc(S.v.campus)} &nbsp; <b>Date:</b> ${d}<br><b>Video title:</b> ${esc(S.v.vtitle)} &nbsp; <b>Points:</b> ${S.pts}</p>`;
+  PARTS.forEach((p,i)=>{h+=`<section><h2>Part ${i+1}: ${p.n}</h2>${p.f.map(f=>pa(f[1].replace(/^\S+\s/,""),S.v[f[0]])).join("")}</section>`;});
+  h+=`<section><h2>Rehearsal</h2>${pa("Rehearsal log",S.v.x_rehearse)}</section>`;
+  h+=`<section><h2>Checklist</h2>${CHECK.map((c,i)=>`<div>${S.v["ck"+i]?"☑":"☐"} ${c}</div>`).join("")}</section>`;
+  h+=`<section><h2>Peer feedback ${S.v.pf_name?"from "+esc(S.v.pf_name):""}</h2>${PEER.map((p,i)=>`<div>${p}: ${"★".repeat(+S.v["pf"+i]||0)}${"☆".repeat(4-(+S.v["pf"+i]||0))}</div>`).join("")}${pa("Strength",S.v.pf_good)}${pa("Suggestion",S.v.pf_fix)}</section>`;
+  h+=`<section><h2>Exit ticket</h2>${pa("3 things my video must include",S.v.t3)}${pa("2 signpost phrases I will use",S.v.t2)}${pa("1 question I still have",S.v.t1)}</section>`;
+  if(S.g.quiz&&S.g.quiz.submitted)h+=`<p><b>Exit quiz score:</b> ${S.g.quiz.score}%</p>`;
+  h+=`<p style="margin-top:20px;font-size:10pt;color:#555">Designed by: Nazila Motahari · LSC 1503 · HCT</p>`;
+  $("printArea").innerHTML=h;document.body.classList.add("p-notes");window.print();
+};
+window.addEventListener("afterprint",()=>document.body.classList.remove("p-notes","p-cert"));
+
+/* ===================== CONFETTI ===================== */
+function confetti(){const c=$("confetti"),x=c.getContext("2d");c.width=innerWidth;c.height=innerHeight;
+  const cols=["#d7263d","#f4b942","#2b7de9","#1fa37a","#7b4bd6","#e8851a"];
+  const P=Array.from({length:140},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,r:4+Math.random()*6,c:cols[Math.floor(Math.random()*6)],vy:2+Math.random()*3,vx:-1.5+Math.random()*3,a:Math.random()*6,va:-.2+Math.random()*.4}));
+  let f=0;(function tick(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.y+=p.vy;p.x+=p.vx;p.a+=p.va;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);x.restore();});
+    if(++f<180)requestAnimationFrame(tick);else x.clearRect(0,0,c.width,c.height);})();}
+
+/* ===================== INIT ===================== */
+function renderAll(){
+  $("pts").textContent=S.pts;renderNav();renderBadges();applyTeacher();
+  renderClips();renderOrder();renderTF();renderTL();renderGuide();renderScript();renderSigs();renderGloss();
+  renderCheck();renderPeer();renderQuiz();renderParts();renderSlide();estimate();updateProgress();updatePrintLock();drawClock();
+  if(S.g.spChecked){const r=SIGS.filter((s,i)=>S.g.sp[i]!==undefined&&S.g.sp[i]!==""&&+S.g.sp[i]===s[1]).length;const fb=$("sigFb");fb.className="fb show "+(r===SIGS.length?"ok":"no");fb.textContent=`${r} / ${SIGS.length} correct.`;}
+}
+renderAll();
+</script>
+</body>
+</html>
