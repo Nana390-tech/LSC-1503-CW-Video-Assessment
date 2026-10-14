@@ -58,6 +58,22 @@ textarea{min-height:90px;resize:vertical}
 .obj ul{margin:6px 0 0;padding-left:20px}
 .muted{color:var(--muted)}
 
+
+/* ASSESSMENT INTRO */
+.intro{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;align-items:stretch}
+@media(max-width:700px){.intro{grid-template-columns:1fr}}
+.ilist{display:grid;gap:10px}
+.irow{display:flex;gap:12px;align-items:center;background:#fffdf9;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.irow .ic{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:20px;color:#fff}
+.irow b{display:block}.irow span{font-size:14px;color:var(--muted)}
+.weight{background:var(--red);color:#fff;border-radius:14px;padding:16px;text-align:center;display:flex;flex-direction:column;justify-content:center}
+.weight .num{font-size:64px;font-weight:900;line-height:1}
+.weight .lbl{font-size:18px;font-weight:800;margin-top:4px}
+.weight i{display:block;margin-top:8px;opacity:.9}
+.why{display:grid;gap:8px;margin-top:10px}
+.why div{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:14px}
+.goal{background:var(--gold);color:var(--ink);border-radius:12px;padding:12px 16px;font-weight:800;text-align:center;margin-top:16px}
+
 /* PHASE NAV */
 .phases{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:18px 0 0}
 .ph{border:none;border-radius:14px;padding:12px 6px;background:#fff;border:2px solid var(--line);text-align:center;font-weight:800;color:var(--ink);position:relative}
@@ -263,6 +279,33 @@ footer{text-align:center;padding:26px 16px 40px;color:var(--muted);font-size:14p
         <li>check a video with the checklist and give useful peer feedback</li>
       </ul>
     </div>
+  </div>
+
+  <div class="card" id="introCard">
+    <h2>🎬 Your new assessment</h2>
+    <p class="muted" style="margin-top:-6px">Before we start, here is the big picture.</p>
+    <div class="intro">
+      <div>
+        <h3>What is it?</h3>
+        <div class="ilist">
+          <div class="irow"><div class="ic" style="background:var(--red)">🎥</div><div><b>A short talking-head video</b><span>You speak straight to the camera.</span></div></div>
+          <div class="irow"><div class="ic" style="background:var(--explore)">💡</div><div><b>A reflection on your learning</b><span>You look back on what you learned this course.</span></div></div>
+          <div class="irow"><div class="ic" style="background:var(--extend)">🙋</div><div><b>Your own individual work</b><span>You plan it, record it and edit it yourself.</span></div></div>
+          <div class="irow"><div class="ic" style="background:var(--evaluate)">📤</div><div><b>Submitted on Blackboard</b><span>You upload your final video when it is ready.</span></div></div>
+        </div>
+      </div>
+      <div>
+        <h3>Why does it matter?</h3>
+        <div class="weight"><div class="num">30%</div><div class="lbl">of your overall grade</div><i>Plan well — it really counts!</i></div>
+        <div class="why">
+          <div>⭐ <b>Show your growth</b> — prove how much your speaking has improved.</div>
+          <div>💼 <b>Get ready for interviews</b> — employers want people who talk clearly about themselves.</div>
+          <div>📷 <b>Build confidence on camera</b> — video calls are part of every job.</div>
+        </div>
+      </div>
+    </div>
+    <div class="goal">🎯 Today's goal: understand the task and start your plan.</div>
+    <div class="row" style="justify-content:center;margin-top:14px"><button class="btn red" id="introBtn">✅ Got it — let's start!</button></div>
   </div>
 
   <nav class="phases" id="phaseNav"></nav>
@@ -557,6 +600,7 @@ function renderNav(){
   $("phaseNav").innerHTML=PHASES.map((p,i)=>`<button class="ph ${S.phase===i?"active":""} ${S.badges.includes(i)?"done":""}" data-i="${i}" style="${S.phase===i?`background:var(${PCOL[i]})`:""}"><span class="n">${p[0]}</span>${p[1]}<small>${p[2]}</small></button>`).join("");
   document.querySelectorAll(".phase").forEach((s,i)=>s.classList.toggle("active",i===S.phase));
 }
+$("introBtn").onclick=()=>{award("intro",10);$("pts").textContent=S.pts;toast("🎬 Great! Let's begin with Engage.");S.phase=0;renderNav();window.scrollTo({top:$("phaseNav").offsetTop-70,behavior:"smooth"});};
 $("phaseNav").addEventListener("click",e=>{const b=e.target.closest(".ph");if(!b)return;S.phase=+b.dataset.i;renderNav();window.scrollTo({top:$("phaseNav").offsetTop-70,behavior:"smooth"});});
 function renderBadges(){$("badges").innerHTML=BADGES.map((b,i)=>`<div class="badge ${S.badges.includes(i)?"on":""}" title="${b[1]}">${b[0]}</div>`).join("");}
 $("teacherBtn").onclick=()=>{S.teacher=!S.teacher;applyTeacher();};
