@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Video Portfolio Studio</title>
+<title>Video Studio Plus</title>
 <style>
 :root{
-  --ink:#13213c; --ink2:#1d3461; --red:#d7263d; --red2:#a8182b; --redsoft:#fde8eb;
-  --cream:#fbf6ee; --card:#ffffff; --line:#e6dfd2; --muted:#5d6782; --gold:#f4b942;
-  --engage:#d7263d; --explore:#2b7de9; --explain:#7b4bd6; --extend:#1fa37a; --evaluate:#e8851a;
+  --ink:#1b3a2f; --ink2:#2d6a4f; --red:#e76f51; --red2:#b5482f; --redsoft:#fdece6;
+  --cream:#f6f5ee; --card:#ffffff; --line:#e3e2d6; --muted:#5b6b62; --gold:#f9c74f;
+  --engage:#e76f51; --explore:#2b7de9; --explain:#7b4bd6; --extend:#1fa37a; --evaluate:#e8851a;
   --ok:#1fa37a; --bad:#d7263d;
 }
 *{box-sizing:border-box}
@@ -19,8 +19,8 @@ input,textarea,select{font-family:inherit;font-size:15px}
 .wrap{max-width:1060px;margin:0 auto;padding:0 16px}
 
 /* HERO */
-.hero{background:linear-gradient(135deg,var(--ink) 0%,var(--ink2) 60%,#2a1f4d 100%);color:#fff;padding:34px 0 64px;position:relative;overflow:hidden}
-.hero:before,.hero:after{content:"";position:absolute;left:0;right:0;height:16px;background:repeating-linear-gradient(90deg,#0b1428 0 22px,transparent 22px 34px)}
+.hero{background:linear-gradient(135deg,var(--ink) 0%,var(--ink2) 60%,#264653 100%);color:#fff;padding:34px 0 64px;position:relative;overflow:hidden}
+.hero:before,.hero:after{content:"";position:absolute;left:0;right:0;height:16px;background:repeating-linear-gradient(90deg,#12281f 0 22px,transparent 22px 34px)}
 .hero:before{top:6px}.hero:after{bottom:6px}
 .hero h1{margin:6px 0 4px;font-size:clamp(28px,5vw,44px);letter-spacing:.5px}
 .hero h1 span{color:var(--gold)}
@@ -201,6 +201,20 @@ body.teacher .tnote{display:block}
 .q label.picked-wrong{background:var(--redsoft);border-color:var(--red)}
 .score{font-size:22px;font-weight:900;text-align:center;padding:14px;border-radius:12px}
 
+/* IDEAS BOARD */
+.ideas{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.idea{border-radius:14px;background:#fffdf9;border:2px solid var(--line);overflow:hidden}
+.idea.complete{border-color:var(--extend)}
+.idea .ih{color:#fff;padding:10px 12px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
+.idea .ib{padding:6px 12px 12px}
+.idea label{font-size:13px;margin-top:8px}
+.idea textarea{font-size:14px;padding:8px 10px;min-height:56px;resize:none}
+.idea .wc{font-size:11px}
+.idea .wc.warn{color:var(--red2);font-weight:700}
+.bprev{background:#fff8e1;border:2px dashed var(--gold);border-radius:10px;padding:8px 12px;margin:8px 0;font-size:14px}
+.bprev b{display:block;color:#8a5a00}
+.bprev span{display:inline-block;background:#fff;border-radius:20px;padding:2px 10px;margin:3px 4px 0 0;border:1px solid #f1dfa7}
+
 /* CERT / MODAL */
 .modal{position:fixed;inset:0;background:rgba(10,18,36,.7);display:none;place-items:center;z-index:200;padding:16px}
 .modal.show{display:grid}
@@ -232,7 +246,22 @@ footer{text-align:center;padding:26px 16px 40px;color:var(--muted);font-size:14p
   #printArea .pq{font-weight:700;margin:8px 0 2px}
   #printArea .pa{white-space:pre-wrap;border:1px solid #ccc;border-radius:6px;padding:6px 8px;min-height:24px}
   #printArea section{break-inside:avoid}
+  body.p-board > *:not(#printArea){display:none!important}
+  body.p-board #printArea{display:block!important;color:#000}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .bd-head{background:#1b3a2f;color:#fff;border-radius:10px;padding:12px 16px;margin-bottom:12px}
+  .bd-head b{font-size:18pt;display:block}
+  .bd-head span{font-size:10.5pt;opacity:.9}
+  .bd-cols{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .bd-col{border:2px solid #ccc;border-radius:10px;overflow:hidden;break-inside:avoid}
+  .bd-col h3{margin:0;color:#fff;font-size:11.5pt;padding:7px 9px}
+  .bd-col div{padding:6px 9px 9px;font-size:10.5pt}
+  .bd-col small{display:block;color:#555;font-weight:700;margin-top:6px}
+  .bd-col p{margin:2px 0 0;min-height:30px;border-bottom:1px dashed #bbb;padding-bottom:4px;white-space:pre-wrap}
+  .bd-foot{margin-top:12px;font-size:10pt;color:#444;display:flex;justify-content:space-between}
 }
+@page board{size:A4 landscape;margin:12mm}
+.bd-page{page:board}
 </style>
 </head>
 <body>
@@ -245,7 +274,7 @@ footer{text-align:center;padding:26px 16px 40px;color:var(--muted);font-size:14p
     <p>Lights, camera, reflect! Plan, script and check your Communication Skills Portfolio video.</p>
     <div class="chips">
       <span class="chip">🔥 Engage</span><span class="chip">🔍 Explore</span><span class="chip">🧠 Explain</span><span class="chip">🎥 Extend</span><span class="chip">✅ Evaluate</span>
-      <span class="chip">⏱️ 3–5 minute video</span><span class="chip">🖨️ Print-ready</span>
+      <span class="chip">💡 Ideas board</span><span class="chip">⏱️ 3–5 minute video</span><span class="chip">🖨️ Print-ready</span>
     </div>
   </div>
 </header>
@@ -387,8 +416,8 @@ footer{text-align:center;padding:26px 16px 40px;color:var(--muted);font-size:14p
 
   <!-- ================= EXTEND ================= -->
   <section class="phase" id="p3">
-    <div class="phead" style="background:var(--extend)"><h2>🎥 Extend — Plan your own video</h2><p>Now you are the director. Build your title slide, write your notes and time yourself.</p></div>
-    <div class="tnote"><b>⏱ Suggested time: 40 min · Individual.</b> Students draft notes (not a word-for-word script to read). Remind them: one or two LPAs, one study skill, own words only. In the last 10 minutes, pairs rehearse Part 1 and Part 4 aloud with the timer. Students save the JSON backup to continue at home.</div>
+    <div class="phead" style="background:var(--extend)"><h2>🎥 Extend — Plan your own video</h2><p>Now you are the director. Build your title slide, jot down rough ideas, then write your notes and time yourself.</p></div>
+    <div class="tnote"><b>⏱ Suggested time: 45 min · Individual.</b> Start with the ideas board (about 10 min, key words only — students who made a My First Ideas card can import it). Then students draft notes (not a word-for-word script to read). Remind them: one or two LPAs, one study skill, own words only. In the last 10 minutes, pairs rehearse Part 1 and Part 4 aloud with the timer. Students save the JSON backup to continue at home.</div>
     <div class="card">
       <h3><span class="act-n">1</span>Title slide builder</h3>
       <div class="grid2">
@@ -406,19 +435,27 @@ footer{text-align:center;padding:26px 16px 40px;color:var(--muted);font-size:14p
       </div>
     </div>
     <div class="card">
-      <h3><span class="act-n">2</span>Script notes planner</h3>
-      <p class="muted">Open each part, write your notes and mark it complete. Each box needs at least 5 words.</p>
+      <h3><span class="act-n">2</span>💡 My rough ideas board</h3>
+      <p class="muted">Before you write, brainstorm! <b>Key words only</b> — a few words in each box is perfect. Your ideas will appear in the script planner to help you write.</p>
+      <div class="row" style="margin-bottom:12px"><button class="btn ghost" id="fiBtn">📥 Import my “First Ideas” card</button><input type="file" id="fiFile" accept=".json,application/json" hidden><span class="muted" style="font-size:14px">Did you make a First Ideas card? Load its file to fill the board.</span></div>
+      <div class="ideas" id="ideas"></div>
+      <div class="row" style="margin-top:12px"><button class="btn red" id="boardPrint">🖨️ Print my ideas board</button><span class="muted" style="font-size:14px">Prints on one page — save it as PDF or add it to the Collaborate Board.</span></div>
+      <div class="tip">✍️ <b>Key words example:</b> “LPA 2A — first time hearing my voice” ✅ &nbsp; not “I chose LPA 2A because it was the first time that I…” ❌</div>
+    </div>
+    <div class="card">
+      <h3><span class="act-n">3</span>Script notes planner</h3>
+      <p class="muted">Now turn your ideas into notes. Open each part — your ideas from the board are shown at the top. Write your notes and mark each part complete. Each box needs at least 5 words.</p>
       <div id="parts"></div>
     </div>
     <div class="card">
-      <h3><span class="act-n">3</span>Speaking time estimator</h3>
+      <h3><span class="act-n">4</span>Speaking time estimator</h3>
       <p class="muted">Based on a comfortable speaking speed of about 120 words per minute.</p>
       <div><b>Total words: <span id="totW">0</span></b> · Estimated time: <b id="estT">0:00</b> · <span id="estMsg" class="muted"></span></div>
       <div class="meter"><div class="fill" id="estFill"></div><div class="zone"></div></div>
       <div class="meter-l"><span>0</span><span>1.5</span><span>3 min</span><span>4.5</span><span>5 min</span><span>6</span></div>
     </div>
     <div class="card">
-      <h3><span class="act-n">4</span>Rehearsal timer</h3>
+      <h3><span class="act-n">5</span>Rehearsal timer</h3>
       <p class="muted">Practise out loud. Green = inside 3–5 minutes. Red = too long.</p>
       <div class="row"><div class="clock" id="clock">0:00</div>
         <button class="btn green" id="swStart">▶ Start</button><button class="btn ghost" id="swStop">⏸ Pause</button><button class="btn ghost" id="swReset">↺ Reset</button></div>
@@ -568,6 +605,15 @@ const SIGS=[
  ["Now, let's move on to study skills.",2],["The skill I found most useful is …",2],["One thing I would like to improve is …",3],
  ["To improve, I will …",3],["To sum up, …",4],["Thank you very much for watching.",4]
 ];
+/* rough ideas board: [key, label, example, required] — separate b_ keys so the script planner stays untouched */
+const IDEAS=[
+ [["b_over","What will my video cover?","LPA 2A · note-taking · speaking speed",1]],
+ [["b_lpa","Which LPA? (one or two)","LPA 2A — About You",1],["b_lpawhy","Why? / What I learned","first time hearing my voice",1]],
+ [["b_skill","Which study skill?","time management",1],["b_ex","One example","weekly planner for exams",1]],
+ [["b_what","WHAT? The issue","speak too fast",1],["b_so","SO WHAT? (if you have an idea)","people can't follow",0],["b_now","NOW WHAT? (if you have an idea)","record myself weekly",0]],
+ [["b_close","One closing idea (optional)","communication = a life skill",0]]
+];
+const BSHORT=["Introduction","LPA","Study skill","Improvement","Conclusion"];
 const GLOSS=[["portfolio","ملف الإنجاز"],["reflection","التأمّل الذاتي"],["verification","التحقّق"],["learning artifact (LPA)","عمل تعلّمي"],["study skill","مهارة دراسية"],["improvement","تحسين"],["strategy","استراتيجية"],["title slide","شريحة العنوان"],["transition","انتقال"],["signposting","عبارات التوجيه والربط"],["summarise","يلخّص"],["closing statement","عبارة ختامية"],["rehearse","يتدرّب"],["fluency","الطلاقة"],["concise","موجز"],["screenshot","لقطة شاشة"],["peer feedback","ملاحظات الزملاء"],["academic integrity","النزاهة الأكاديمية"],["evidence","دليل"],["edit","يعدّل / يحرّر"]];
 const CHECK=["Title slide with name, ID, college and date","Show ID card at the start","Title slides for each section","LPA reflection (what, why, what you learned)","Study skill (what, why, what you learned)","Improvement section (What? So What? Now What?)","Clear and strong conclusion","Edit for clarity, sound and visuals","Peer feedback received","Video uploaded to Blackboard"];
 const PEER=["Structure — all 5 parts are clear","Clarity — grammar & pronunciation","Delivery — eye contact & gestures","Timing — about 3–5 minutes","Visuals — title slides & screenshot"];
@@ -612,6 +658,7 @@ function updateProgress(){
   total+=TF.length;got+=Object.keys(S.g.tf).length;
   total+=TL.length;got+=Object.keys(S.g.tl).length;
   total+=1;got+=S.g.spChecked?1:0;
+  total+=IDEAS.length;got+=IDEAS.filter((f,i)=>boardOk(i)).length;
   total+=PARTS.length*2;got+=PARTS.filter((p,i)=>S.done["part"+i]).length*2;
   total+=CHECK.length;got+=CHECK.filter((c,i)=>S.v["ck"+i]).length;
   total+=2;got+=(S.g.quiz&&S.g.quiz.submitted)?2:0;
@@ -634,6 +681,7 @@ function onInput(k,silent){
   if(["vtitle","name","sid","campus","date"].includes(k))renderSlide();
   if(k.startsWith("ck")&&!silent){if(S.v[k])award(k,5);$("pts").textContent=S.pts;updateProgress();}
   if(/^(i_|l_|s_|m_|c_)/.test(k))estimate();
+  if(k.startsWith("b_")){ideaWc(k);checkBoard(silent);}
 }
 
 /* ===================== ENGAGE ===================== */
@@ -718,12 +766,46 @@ function renderSlide(){
 function renderParts(){
   $("parts").innerHTML=PARTS.map((p,i)=>{const done=S.done["part"+i];
    return `<div class="part ${done?"complete":""}" id="part${i}"><div class="ptop" data-i="${i}"><div class="num" style="background:${p.c}">${i+1}</div><div><h3>${p.n}</h3><small>${p.s}</small></div><span class="st">${done?"✅":"⬜"} ▾</span></div>
-   <div class="pbody"><div class="inc"><b>📌 What to include</b><ul>${p.inc.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+   <div class="pbody"><div class="bprev" id="bprev${i}"></div><div class="inc"><b>📌 What to include</b><ul>${p.inc.map(x=>`<li>${x}</li>`).join("")}</ul></div>
    <div class="tip">🗣️ <b>Sentence starters:</b> ${p.fr.map(esc).join(" · ")}</div>
    ${p.f.map(f=>`<div class="fld"><label>${f[1]} ${f[2]?'<span class="opt">(optional)</span>':""}</label><textarea data-k="${f[0]}" placeholder="Write short notes in your own words…"></textarea><div class="wc" data-wc="${f[0]}"></div></div>`).join("")}
    <button class="btn green" data-done="${i}">${done?"✓ Completed — update":"✅ Mark Part "+(i+1)+" complete"}</button><div class="warn" id="warn${i}"></div></div></div>`;}).join("");
-  bindAll();
+  bindAll();updateBoardPrevs();
 }
+/* ===== IDEAS BOARD ===== */
+function renderBoard(){
+  $("ideas").innerHTML=PARTS.map((p,i)=>`<div class="idea" id="idea${i}"><div class="ih" style="background:${p.c}"><span>${i+1}. ${BSHORT[i]}</span><span class="st"></span></div><div class="ib">
+    ${IDEAS[i].map(f=>`<label>${f[1]}</label><textarea data-k="${f[0]}" maxlength="80" rows="2" placeholder="e.g. ${esc(f[2])}"></textarea><div class="wc" data-wc="${f[0]}"></div>`).join("")}</div></div>`).join("");
+}
+function ideaWc(k){const el=document.querySelector(`[data-wc="${k}"]`);if(!el)return;const n=words(S.v[k]);
+  el.textContent=n>10?"✂️ Key words only — try fewer words":n?n+" words":"";el.classList.toggle("warn",n>10);}
+function boardOk(i){const fs=IDEAS[i],req=fs.filter(f=>f[3]);return req.length?req.every(f=>words(S.v[f[0]])>=1):fs.some(f=>words(S.v[f[0]])>=1);}
+function checkBoard(silent){
+  IDEAS.forEach((fs,i)=>{const ok=boardOk(i);const el=$("idea"+i);if(el){el.classList.toggle("complete",ok);el.querySelector(".st").textContent=ok?"✅":"";}
+    if(ok&&!silent&&!S.aw["idea"+i]){award("idea"+i,10);$("pts").textContent=S.pts;}});
+  if(!silent&&IDEAS.every((f,i)=>boardOk(i))&&!S.aw.board){award("board",30);$("pts").textContent=S.pts;confetti();toast("💡 Ideas board done! Now turn your ideas into notes in the script planner.");}
+  updateBoardPrevs();updateProgress();
+}
+function updateBoardPrevs(){
+  IDEAS.forEach((fs,i)=>{const el=$("bprev"+i);if(!el)return;const got=fs.filter(f=>(S.v[f[0]]||"").trim());
+    el.innerHTML=got.length?`<b>💡 From your ideas board</b>${got.map(f=>`<span>${esc(S.v[f[0]])}</span>`).join("")}`:`<b>💡 From your ideas board</b><i class="muted">Nothing yet — add key words on the ideas board first.</i>`;});
+}
+$("fiBtn").onclick=()=>$("fiFile").click();
+$("fiFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result),v=d.v||{};
+  if(d.app!=="My First Ideas"){toast("⚠️ This is not a My First Ideas file.");return;}
+  const map={l_what:"b_lpa",l_why:"b_lpawhy",s_what:"b_skill",s_learn:"b_ex",m_what:"b_what",name:"name",sid:"sid",vtitle:"vtitle"};
+  Object.entries(map).forEach(([a,b])=>{if(v[a]&&!S.v[b])S.v[b]=v[a];});
+  bindAll();renderSlide();checkBoard();toast("📥 First ideas imported — shorten them to key words if they are long!");}catch(err){toast("⚠️ That file could not be read.");}};r.readAsText(f);e.target.value="";};
+$("boardPrint").onclick=()=>{
+  if(!IDEAS.flat().some(f=>words(S.v[f[0]])>=1)){toast("✍️ Add some ideas to your board first.");return;}
+  if(!(S.v.name||"").trim())toast("💡 Tip: add your name in Your Details at the top.");
+  const cols=PARTS.map((p,i)=>`<div class="bd-col" style="border-color:${p.c}"><h3 style="background:${p.c}">${i+1}. ${BSHORT[i]}</h3><div>${IDEAS[i].map(f=>`<small>${esc(f[1])}</small><p>${esc(S.v[f[0]]||"")}</p>`).join("")}</div></div>`).join("");
+  $("printArea").innerHTML=`<div class="bd-page"><div class="bd-head"><b>🎬 ${esc(S.v.name||"My")}${S.v.name?"'s":""} rough ideas board</b><span>${[S.v.sid,S.v.vtitle?"Title: “"+S.v.vtitle+"”":"","LSC 1503 Portfolio Video"].filter(Boolean).map(esc).join("  ·  ")}</span></div>
+    <div class="bd-cols">${cols}</div>
+    <div class="bd-foot"><span>✍️ Key words only — next step: turn your ideas into notes.</span><span>${new Date().toLocaleDateString("en-GB")} · Designed by: Nazila Motahari · HCT</span></div></div>`;
+  award("boardPrint",10);$("pts").textContent=S.pts;
+  document.body.classList.add("p-board");window.print();
+};
 $("parts").addEventListener("click",e=>{
   const top=e.target.closest(".ptop");if(top){$("part"+top.dataset.i).classList.toggle("open");return;}
   const b=e.target.closest("[data-done]");if(!b)return;const i=+b.dataset.done;
@@ -790,6 +872,7 @@ $("printBtn").onclick=()=>{
   const pa=(q,a)=>`<div class="pq">${q}</div><div class="pa">${esc(a)||"—"}</div>`;
   const d=S.v.date?new Date(S.v.date+"T00:00").toLocaleDateString("en-GB"):"";
   let h=`<h1>Communication Skills Portfolio — Video Notes</h1><p><b>Name:</b> ${esc(S.v.name)} &nbsp; <b>ID:</b> ${esc(S.v.sid)} &nbsp; <b>Campus:</b> ${esc(S.v.campus)} &nbsp; <b>Date:</b> ${d}<br><b>Video title:</b> ${esc(S.v.vtitle)} &nbsp; <b>Points:</b> ${S.pts}</p>`;
+  h+=`<section><h2>My rough ideas board</h2>${PARTS.map((p,i)=>`<div class="pq">${i+1}. ${BSHORT[i]}</div><div class="pa">${IDEAS[i].map(f=>esc(S.v[f[0]]||"")).filter(Boolean).join(" · ")||"—"}</div>`).join("")}</section>`;
   PARTS.forEach((p,i)=>{h+=`<section><h2>Part ${i+1}: ${p.n}</h2>${p.f.map(f=>pa(f[1].replace(/^\S+\s/,""),S.v[f[0]])).join("")}</section>`;});
   h+=`<section><h2>Rehearsal</h2>${pa("Rehearsal log",S.v.x_rehearse)}</section>`;
   h+=`<section><h2>Checklist</h2>${CHECK.map((c,i)=>`<div>${S.v["ck"+i]?"☑":"☐"} ${c}</div>`).join("")}</section>`;
@@ -799,11 +882,11 @@ $("printBtn").onclick=()=>{
   h+=`<p style="margin-top:20px;font-size:10pt;color:#555">Designed by: Nazila Motahari · LSC 1503 · HCT</p>`;
   $("printArea").innerHTML=h;document.body.classList.add("p-notes");window.print();
 };
-window.addEventListener("afterprint",()=>document.body.classList.remove("p-notes","p-cert"));
+window.addEventListener("afterprint",()=>document.body.classList.remove("p-notes","p-cert","p-board"));
 
 /* ===================== CONFETTI ===================== */
 function confetti(){const c=$("confetti"),x=c.getContext("2d");c.width=innerWidth;c.height=innerHeight;
-  const cols=["#d7263d","#f4b942","#2b7de9","#1fa37a","#7b4bd6","#e8851a"];
+  const cols=["#e76f51","#f9c74f","#2b7de9","#2d6a4f","#7b4bd6","#e8851a"];
   const P=Array.from({length:140},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,r:4+Math.random()*6,c:cols[Math.floor(Math.random()*6)],vy:2+Math.random()*3,vx:-1.5+Math.random()*3,a:Math.random()*6,va:-.2+Math.random()*.4}));
   let f=0;(function tick(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.y+=p.vy;p.x+=p.vx;p.a+=p.va;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);x.restore();});
     if(++f<180)requestAnimationFrame(tick);else x.clearRect(0,0,c.width,c.height);})();}
@@ -812,7 +895,7 @@ function confetti(){const c=$("confetti"),x=c.getContext("2d");c.width=innerWidt
 function renderAll(){
   $("pts").textContent=S.pts;renderNav();renderBadges();applyTeacher();
   renderClips();renderOrder();renderTF();renderTL();renderGuide();renderScript();renderSigs();renderGloss();
-  renderCheck();renderPeer();renderQuiz();renderParts();renderSlide();estimate();updateProgress();updatePrintLock();drawClock();
+  renderCheck();renderPeer();renderQuiz();renderBoard();renderParts();checkBoard(true);renderSlide();estimate();updateProgress();updatePrintLock();drawClock();
   if(S.g.spChecked){const r=SIGS.filter((s,i)=>S.g.sp[i]!==undefined&&S.g.sp[i]!==""&&+S.g.sp[i]===s[1]).length;const fb=$("sigFb");fb.className="fb show "+(r===SIGS.length?"ok":"no");fb.textContent=`${r} / ${SIGS.length} correct.`;}
 }
 renderAll();
